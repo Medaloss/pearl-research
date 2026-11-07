@@ -1,4 +1,4 @@
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
-  Content-Security-Policy: default-src 'self'; connect-src 'self' https://api.coinlore.net; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'self'; connect-src 'self' https://api.coinlore.net; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data: https://images.openai.com https://www.google.com https://images.openai.com https://www.google.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'
