@@ -3,15 +3,17 @@
   align-items: center;
   justify-content: space-between;
   gap: 18px 24px;
-  flex-wrap: wrap;
   margin: 15px 0 24px;
 }
 
 .report-title h1 {
   margin: 0;
+  min-width: 0;
+  font-size: clamp(30px, 4vw, 44px);
 }
 
 .pearl-revenue {
+  flex: 0 0 auto;
   min-width: 0;
   max-width: 100%;
   padding: 11px 15px;
@@ -52,6 +54,7 @@
 @media (max-width: 600px) {
   .report-title {
     gap: 12px;
+    flex-wrap: wrap;
   }
 
   .pearl-revenue {
