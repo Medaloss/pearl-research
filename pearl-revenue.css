@@ -1,0 +1,60 @@
+.report-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px 24px;
+  flex-wrap: wrap;
+  margin: 15px 0 24px;
+}
+
+.report-title h1 {
+  margin: 0;
+}
+
+.pearl-revenue {
+  min-width: 0;
+  max-width: 100%;
+  padding: 11px 15px;
+  border: 1px solid var(--border, #365243);
+  border-radius: 12px;
+  background: var(--card, #142f24);
+  line-height: 1.4;
+}
+
+.pearl-revenue strong {
+  font-size: 13px;
+}
+
+.pearl-revenue dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 18px;
+  margin: 6px 0;
+}
+
+.pearl-revenue dt,
+.pearl-revenue p {
+  color: var(--muted, #aec6b8);
+  font-size: 11px;
+}
+
+.pearl-revenue dd {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.pearl-revenue p {
+  margin: 3px 0 0;
+}
+
+@media (max-width: 600px) {
+  .report-title {
+    gap: 12px;
+  }
+
+  .pearl-revenue {
+    width: 100%;
+  }
+}
