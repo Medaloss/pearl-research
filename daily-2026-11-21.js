@@ -1,0 +1,22 @@
+const pause=document.getElementById('ticker-pause');if(pause)pause.addEventListener('click',()=>{const on=document.getElementById('ticker-track').classList.toggle('paused');pause.textContent=on?'Reprendre':'Pause';});
+async function refreshCrypto(){const track=document.getElementById('ticker-track');if(!track)return;const status=document.getElementById('ticker-status');const safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));try{const r=await fetch('https://api.coinlore.net/api/tickers/?start=0&limit=20',{signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error('HTTP '+r.status);const json=await r.json();const data=json.data;if(!Array.isArray(data)||data.length!==20||!data.every(c=>Number.isFinite(Number(c.price_usd))&&Number(c.market_cap_usd)>0))throw Error('Données incomplètes');data.sort((a,b)=>Number(b.market_cap_usd)-Number(a.market_cap_usd));const stamp=Number(json.info?.time);const date=Number.isFinite(stamp)&&stamp>0?new Date(stamp*1000):null;const label=date&&!isNaN(date)?date.toLocaleString('fr-FR',{timeZone:'Europe/Paris'})+' Paris':'Horodatage fournisseur indisponible';const items=data.map((c,i)=>'<span class="crypto-item">#'+(i+1)+' <strong>'+safe(c.symbol)+'</strong> '+Number(c.price_usd).toLocaleString('fr-FR',{style:'currency',currency:'USD',maximumFractionDigits:Number(c.price_usd)<1?6:2})+' <em class="'+(Number(c.percent_change_24h)>=0?'up':'down')+'">'+safe(c.percent_change_24h)+' % / 24 h</em></span>').join('');track.innerHTML='<div style="display:flex">'+items+'</div><div aria-hidden="true" style="display:flex">'+items+'</div>';status.innerHTML='Source : <a href="https://www.coinlore.com/" target="_blank" rel="noopener">CoinLore</a> · '+safe(label)+' · Chargé à '+new Date().toLocaleTimeString('fr-FR',{timeZone:'Europe/Paris'})+' Paris · Cours indicatifs en USD, classement propre au fournisseur';const total=data.reduce((s,c)=>s+Number(c.market_cap_usd),0);const groups=[...data.slice(0,5).map(c=>({name:c.name,value:Number(c.market_cap_usd)})),{name:'Les 15 autres',value:data.slice(5).reduce((s,c)=>s+Number(c.market_cap_usd),0)}];const colors=['#7be0c0','#aaa1ff','#efca7d','#7abfff','#f39ac0','#4b617c'];let pos=0;const stops=groups.map((g,i)=>{const a=pos;pos+=g.value/total*100;return colors[i]+' '+a+'% '+pos+'%';});document.getElementById('cap-donut').innerHTML='<figure class="infographic"><div class="donut-layout"><div class="donut" role="img" aria-label="Répartition du top 20 détaillée dans la légende" style="background:conic-gradient('+stops.join(',')+')"></div><div class="legend">'+groups.map((g,i)=>'<div><i style="background:'+colors[i]+'"></i>'+safe(g.name)+' · '+(g.value/total*100).toFixed(2)+' %</div>').join('')+'</div></div><figcaption>Capitalisation relative au top 20 CoinLore · '+safe(label)+'</figcaption></figure>';}catch(e){if(!track.querySelector('.crypto-item'))track.textContent='Cours momentanément indisponibles';status.textContent='CoinLore indisponible · Aucun cours inventé. Les derniers cours affichés, s’il y en a, restent ceux du relevé précédent.';}}refreshCrypto();setInterval(()=>{if(!document.hidden)refreshCrypto();},300000);
+
+
+
+
+
+document.getElementById('edition').addEventListener('change',event=>location.assign(event.target.value));
+document.getElementById('print').addEventListener('click',()=>window.print());
+const radar={
+  "7": "<h3>7 j · semaine de Thanksgiving</h3><p>Beige Book le 25 novembre à 20 h Paris. NYSE fermé le 26 pour Thanksgiving, puis clôture anticipée de sa séance principale le 27 à 19 h Paris. Le calendrier Fed décale certaines publications du 26 au 27.</p>",
+  "24": "<h3>24 h · suivi du week-end</h3><p>Le NYSE est fermé pour le week-end, tandis que les marchés crypto continuent de coter. Suivre la tenue de 1,72–1,83 $ sur PEARL, le volume de la même paire et l’évolution du financement. Le prochain rendez-vous macro retenu est le Beige Book du 25 novembre.</p>",
+  "30": "<h3>30 j · emploi, taux et prix</h3><p>JOLTS le 1er décembre à 16 h, emploi américain le 4 à 14 h 30, Michigan préliminaire de décembre le 4 à 16 h, FOMC avec projections les 8–9, CPI le 10 et PPI le 15 à 14 h 30. Heures de Paris.</p>"
+};
+const panel=document.getElementById('radar-panel');
+const buttons=[...document.querySelectorAll('[data-radar]')];
+for(const button of buttons){
+  button.addEventListener('click',()=>{
+    for(const item of buttons) item.setAttribute('aria-pressed',String(item===button));
+    panel.innerHTML=radar[button.dataset.radar];
+  });
+}
